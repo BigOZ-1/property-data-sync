@@ -1,0 +1,9 @@
+property_id,address,city,state,zip,unit_count,status,last_updated
+P1001,123 Ocean Ave,Deerfield Beach,FL,33441,12,active,2026-06-18
+P1002,456 Palm St,Deerfield Beach,FL,33442,8,active,2026-06-18
+P1003,,Boca Raton,FL,33431,20,active,2026-06-17
+P1004,789 Sunrise Blvd,Boca Raton,FL,,15,active,2026-06-18
+P1005,321 Federal Hwy,Pompano Beach,FL,33060,6,inactive,2026-06-15
+P1006,654 Atlantic Blvd,Pompano Beach,FL,33062,10,active,2026-06-19
+P1007,987 Hillsboro Rd,Deerfield Beach,FL,33441,4,active,2026-06-19
+P1008,147 Congress Ave,Boynton Beach,FL,33426,25,active,2026-06-18

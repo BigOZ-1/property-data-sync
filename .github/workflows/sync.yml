@@ -1,0 +1,71 @@
+name: Property Data Sync CI/CD
+
+on:
+  # Run tests on every push to main
+  push:
+    branches: [main]
+
+  # Run tests on every PR targeting main
+  pull_request:
+    branches: [main]
+
+  # Run the real sync job every night at 6am UTC (2am EST)
+  schedule:
+    - cron: '0 6 * * *'
+
+  # Allow manual triggering from the Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to sync'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  test:
+    # Only run on code changes -- not on schedule or manual sync runs
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -v
+
+  sync:
+    # Only run the actual data sync on schedule or manual trigger
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run property sync
+        run: python -m src.property_sync
+
+      - name: Upload sync output as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: synced-properties
+          path: data/synced_properties.json
